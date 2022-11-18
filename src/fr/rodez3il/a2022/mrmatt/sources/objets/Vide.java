@@ -3,8 +3,8 @@ package fr.rodez3il.a2022.mrmatt.sources.objets;
 public class Vide extends ObjetPlateau {
 
     @Override
-    public abstract char afficher(){
-        return " ";
+    public  char afficher(){
+        return ' ';
     }
 
     @Override

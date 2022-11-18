@@ -1,10 +1,10 @@
 package fr.rodez3il.a2022.mrmatt.sources.objets;
 
-public class Joueu extends ObjetPlateau {
+public class Joueur extends ObjetPlateau {
 
     @Override
-    public abstract char afficher(){
-        return "H";
+    public char afficher(){
+        return 'H';
     }
     
 }

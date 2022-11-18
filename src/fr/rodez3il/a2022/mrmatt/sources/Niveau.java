@@ -1,5 +1,8 @@
 package fr.rodez3il.a2022.mrmatt.sources;
 
+import fr.rodez3il.a2022.mrmatt.sources.objets.ObjetPlateau;
+import fr.rodez3il.a2022.mrmatt.sources.objets.Rocher;
+
 public class Niveau {
 	
 	// Les objets sur le plateau du niveau
@@ -16,8 +19,10 @@ public class Niveau {
 	 * @author .............
 	 */
 	public Niveau(String chemin) {
-		this();
 		chargerNiveau(chemin);
+	}
+
+	private void chargerNiveau(String chemin) {
 	}
 
 	/**
@@ -37,7 +42,7 @@ public class Niveau {
 
   // TODO : patron visiteur du Rocher...
 	public void etatSuivantVisiteur(Rocher r, int x, int y) {
-    
+
 	}
 
 	/**
@@ -52,24 +57,27 @@ public class Niveau {
 
   // Illustrez les Javadocs manquantes lorsque vous coderez ces méthodes !
   
-	public boolean enCours() {}
+	public boolean enCours() {
+		return false;
+	}
 
   // Joue la commande C passée en paramètres
 	public boolean jouer(Commande c) {
+		return false;
 	}
 
 	/**
 	 * Affiche l'état final (gagné ou perdu) une fois le jeu terminé.
 	 */
 	public void afficherEtatFinal() {
+
 	}
 
 	/**
 	 */
-	public boolean estIntermediaire() {}
+	public boolean estIntermediaire() {
+		return false;
+	}
 
-  // Code pour empêcher la compilation
-
-  MANGEZ DES POMMES
 
 }
