@@ -29,7 +29,9 @@ public class Niveau {
 	 * Javadoc à réaliser...
 	 */
 	private void echanger(int sourceX, int sourceY, int destinationX, int destinationY) {
-    // ........
+		ObjetPlateau objetPlateau = this.plateau[sourceX][sourceY];
+		this.plateau[sourceX][sourceY] = this.plateau[destinationX][destinationY];
+		this.plateau[destinationX][destinationY] = objetPlateau;
 	}
 
 	/**
@@ -78,6 +80,4 @@ public class Niveau {
 	public boolean estIntermediaire() {
 		return false;
 	}
-
-
 }
