@@ -10,8 +10,13 @@ public class Niveau {
 	// Position du joueur
 	private int joueurX;
 	private int joueurY;
+	// Autres attributs que vous jugerez nécessaires...
+	private int pommesRestantes;
+	private int nombresDeplacements;
+	private int TAILLE_HORIZONTALE;
+	private int TAILLE_VERTICALE;
 	
-  // Autres attributs que vous jugerez nécessaires...
+
   
 	/**
 	 * Constructeur public : crée un niveau depuis un fichier.
@@ -19,14 +24,70 @@ public class Niveau {
 	 * @author .............
 	 */
 	public Niveau(String chemin) {
-		chargerNiveau(chemin);
+		this.chargerNiveau(chemin);
+		this.plateau = new ObjetPlateau[0][0];
+		this.pommesRestantes = 0;
+		this.nombresDeplacements = 0;
+		this.chargerNiveau(chemin);
+
+
+
 	}
 
-	private void chargerNiveau(String chemin) {
+	public ObjetPlateau[][] getPlateau() {
+		return plateau;
+	}
+
+	public void setPlateau(ObjetPlateau[][] plateau) {
+		this.plateau = plateau;
 	}
 
 	/**
-	 * Javadoc à réaliser...
+	 *
+	 */
+	private void chargerNiveau(String chemin) {
+		String cheminNiveau = Utils.lireFichier(chemin);
+		String[] taillePlateau = cheminNiveau.split("\n");
+		TAILLE_HORIZONTALE = Integer.valueOf(taillePlateau[0]);
+		TAILLE_VERTICALE = Integer.valueOf(taillePlateau[1]);
+		this.plateau = new ObjetPlateau[TAILLE_VERTICALE][TAILLE_HORIZONTALE];
+
+		//aide de Mr ADAMI
+		int compteurLignePlateau = 0;
+		int compteurColonnePlateau = 0;
+
+		for(int xColonne=2; xColonne<TAILLE_VERTICALE-1; xColonne++){
+
+			for(int yLigne=0; yLigne<TAILLE_HORIZONTALE; yLigne++){
+
+
+				char caractereCourrant = taillePlateau[xColonne].charAt(compteurLignePlateau);
+
+				if(caractereCourrant=='*'||caractereCourrant=='+'||caractereCourrant=='H'
+						||caractereCourrant=='-'||caractereCourrant=='#'||caractereCourrant==' '){
+					this.plateau[compteurColonnePlateau][yLigne]= ObjetPlateau.depuisCaractere(caractereCourrant);
+					if(caractereCourrant=='H'){
+						this.joueurX=compteurColonnePlateau;
+						this.joueurY=yLigne;
+
+					}
+
+					if(caractereCourrant=='+'){
+						this.pommesRestantes++;
+					}
+				}
+				compteurLignePlateau++;
+
+			}
+			compteurColonnePlateau++;
+			compteurLignePlateau=0;
+
+		}
+
+}
+
+	/**
+	 * échange l’objet en position (sourceX, sourceY) avec celui en position (destinationX, destinationY)
 	 */
 	private void echanger(int sourceX, int sourceY, int destinationX, int destinationY) {
 		ObjetPlateau objetPlateau = this.plateau[sourceX][sourceY];
@@ -39,7 +100,16 @@ public class Niveau {
 	 * ................
 	 */
 	public void afficher() {
-    // TODO
+		// aide de Mr ADAMI
+		for(int xVertical=0; xVertical<=TAILLE_VERTICALE-1; xVertical++){
+			String ligne ="";
+			for(int yHorizontal=0; yHorizontal<TAILLE_HORIZONTALE; yHorizontal++) {
+				if(this.getPlateau()[xVertical][yHorizontal]!=null){
+					ligne+=this.getPlateau()[xVertical][yHorizontal].afficher();
+				}
+			}
+			System.out.println(ligne);
+		}
 	}
 
   // TODO : patron visiteur du Rocher...
