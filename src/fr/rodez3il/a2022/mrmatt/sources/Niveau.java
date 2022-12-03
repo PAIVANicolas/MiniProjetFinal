@@ -56,7 +56,7 @@ public class Niveau {
 		int compteurLignePlateau = 0;
 		int compteurColonnePlateau = 0;
 
-		for(int xColonne=2; xColonne<TAILLE_VERTICALE-1; xColonne++){
+		for(int xColonne=2; xColonne<TAILLE_VERTICALE+2; xColonne++){
 
 			for(int yLigne=0; yLigne<TAILLE_HORIZONTALE; yLigne++){
 
@@ -101,7 +101,7 @@ public class Niveau {
 	 */
 	public void afficher() {
 		// aide de Mr ADAMI
-		for(int xVertical=0; xVertical<=TAILLE_VERTICALE-1; xVertical++){
+		for(int xVertical=0; xVertical<TAILLE_VERTICALE; xVertical++){
 			String ligne ="";
 			for(int yHorizontal=0; yHorizontal<TAILLE_HORIZONTALE; yHorizontal++) {
 				if(this.getPlateau()[xVertical][yHorizontal]!=null){
@@ -133,8 +133,38 @@ public class Niveau {
 		return false;
 	}
 
+	/**
+	 * Test que le déplacement dx et dy ne sort pas du plateau et que le déplacement est marchable
+	 */
+	private boolean deplacementPossible(int dx, int dy){
+		return dx<=17&&dx>=0&&dy<=30&&dy>=0&&this.getPlateau()[dx][dy].estMarchable();
+	}
+
+	/**
+	 *
+	 */
+	public void deplacer(int deltaX, int deltaY){
+		this.echanger( this.joueurX,this.joueurY,deltaX,deltaY);
+		this.joueurX = deltaX;
+		this.joueurY = deltaY;
+	}
+
   // Joue la commande C passée en paramètres
 	public boolean jouer(Commande c) {
+		switch (c){
+			case BAS: this.echanger(this.joueurX,this.joueurY,this.joueurX++,this.joueurY);
+				this.nombresDeplacements++;
+				return true;
+			case HAUT:this.echanger(this.joueurX,this.joueurY,this.joueurX-1,this.joueurY);
+				this.nombresDeplacements++;
+				return true;
+			case DROITE:this.echanger(this.joueurX,this.joueurY,this.joueurX,this.joueurY++);
+				this.nombresDeplacements++;
+				return true;
+			case GAUCHE:this.echanger(this.joueurX,this.joueurY,this.joueurX,this.joueurY-1);
+				this.nombresDeplacements++;
+				return true;
+		}
 		return false;
 	}
 
