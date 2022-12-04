@@ -98,9 +98,14 @@ public class Niveau {
 	 * échange l’objet en position (sourceX, sourceY) avec celui en position (destinationX, destinationY)
 	 */
 	private void echanger(int sourceX, int sourceY, int destinationX, int destinationY) {
+
+		System.out.println(sourceX + " " + sourceY + " " + destinationX + " " + destinationY);
+
 		ObjetPlateau objetPlateau = this.plateau[sourceX][sourceY];
 		if(this.plateau[destinationX][destinationY].estMarchable()){
 			if(this.plateau[destinationX][destinationY].afficher() == '+'){
+				this.plateau[sourceX][sourceY] = new Vide();
+				this.plateau[destinationX][destinationY]=objetPlateau;
 				this.pommesRestantes--;
 			}
 			this.plateau[sourceX][sourceY] = new Vide();
@@ -109,8 +114,6 @@ public class Niveau {
 			this.plateau[sourceX][sourceY] = this.plateau[destinationX][destinationY];
 			this.plateau[destinationX][destinationY] = objetPlateau;
 		}
-		this.joueurX = destinationX;
-		this.joueurY = destinationY;
 	}
 
 	/**
@@ -128,6 +131,8 @@ public class Niveau {
 			}
 			System.out.println(ligne);
 		}
+		System.out.println("Nombre de pommes restantes : " + pommesRestantes);
+		System.out.println("Nombre de deplacements : " + nombresDeplacements);
 	}
 
   // TODO : patron visiteur du Rocher...
@@ -158,14 +163,16 @@ public class Niveau {
     // TODO
 		for (int x = plateau.length - 1; x >= 0; x--) {
 			for (int y = plateau[x].length - 1; y >= 0; y--) { plateau[x][y].visiterPlateauCalculEtatSuivant(this, x, y);
-			} }
+			}
+		}
+		this.gagner = pommesRestantes == 0;
 	}
 
 
   // Illustrez les Javadocs manquantes lorsque vous coderez ces méthodes !
   
 	public boolean enCours() {
-		if(!this.gagner||!this.perdu){
+		if(!this.gagner && !this.perdu){
 			return true;
 		}
 		return false;
@@ -175,7 +182,10 @@ public class Niveau {
 	 * Test que le déplacement dx et dy ne sort pas du plateau et que le déplacement est marchable
 	 */
 	private boolean deplacementPossible(int dx, int dy){
-		return dx<=17&&dx>=0&&dy<=30&&dy>=0&&this.getPlateau()[dx][dy].estMarchable();
+		if ((dx>=0&&dy>=0) && dx<plateau.length && dy<plateau[0].length && this.plateau[dx][dy].estMarchable()){
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -190,16 +200,17 @@ public class Niveau {
   // Joue la commande C passée en paramètres
 	public boolean jouer(Commande c) {
 		switch (c){
-			case BAS: this.echanger(this.joueurX,this.joueurY,this.joueurX++,this.joueurY);
+			case BAS:
+				this.deplacer(this.joueurX+1, this.joueurY);
 				this.nombresDeplacements++;
 				return true;
-			case HAUT:this.echanger(this.joueurX,this.joueurY,this.joueurX-1,this.joueurY);
+			case HAUT:this.deplacer(this.joueurX-1,this.joueurY);
 				this.nombresDeplacements++;
 				return true;
-			case DROITE:this.echanger(this.joueurX,this.joueurY,this.joueurX,this.joueurY++);
+			case DROITE:this.deplacer(this.joueurX,this.joueurY+1);
 				this.nombresDeplacements++;
 				return true;
-			case GAUCHE:this.echanger(this.joueurX,this.joueurY,this.joueurX,this.joueurY-1);
+			case GAUCHE:this.deplacer(this.joueurX,this.joueurY-1);
 				this.nombresDeplacements++;
 				return true;
 		}
@@ -210,11 +221,9 @@ public class Niveau {
 	 * Affiche l'état final (gagné ou perdu) une fois le jeu terminé.
 	 */
 	public void afficherEtatFinal() {
-		if(pommesRestantes == 0){
-			this.gagner = true;
-		}if (this.gagner){
+		if(this.gagner){
 			System.out.println("Vous avez gagné !");
-		}else{
+		}else if (this.perdu){
 			System.out.println("Vous avez perdu !");
 		}
 	}

@@ -83,5 +83,4 @@ public class Jeu {
 		plateau.afficher();
 		plateau.afficherEtatFinal();
 	}
-
 }
