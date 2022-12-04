@@ -59,4 +59,5 @@ public abstract class ObjetPlateau {
 	public void visiterPlateauCalculEtatSuivant(Niveau niveau, int x, int y){
 		
 	}
+
 }

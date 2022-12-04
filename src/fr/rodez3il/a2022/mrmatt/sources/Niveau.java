@@ -1,7 +1,13 @@
 package fr.rodez3il.a2022.mrmatt.sources;
 
+import fr.rodez3il.a2022.mrmatt.sources.objets.EtatRocher;
 import fr.rodez3il.a2022.mrmatt.sources.objets.ObjetPlateau;
 import fr.rodez3il.a2022.mrmatt.sources.objets.Rocher;
+import fr.rodez3il.a2022.mrmatt.sources.objets.EtatRocher;
+import fr.rodez3il.a2022.mrmatt.sources.objets.Vide;
+
+import static fr.rodez3il.a2022.mrmatt.sources.objets.EtatRocher.CHUTE;
+import static fr.rodez3il.a2022.mrmatt.sources.objets.EtatRocher.FIXE;
 
 public class Niveau {
 	
@@ -15,6 +21,8 @@ public class Niveau {
 	private int nombresDeplacements;
 	private int TAILLE_HORIZONTALE;
 	private int TAILLE_VERTICALE;
+	private boolean gagner = false;
+	private boolean perdu = false;
 	
 
   
@@ -91,8 +99,18 @@ public class Niveau {
 	 */
 	private void echanger(int sourceX, int sourceY, int destinationX, int destinationY) {
 		ObjetPlateau objetPlateau = this.plateau[sourceX][sourceY];
-		this.plateau[sourceX][sourceY] = this.plateau[destinationX][destinationY];
-		this.plateau[destinationX][destinationY] = objetPlateau;
+		if(this.plateau[destinationX][destinationY].estMarchable()){
+			if(this.plateau[destinationX][destinationY].afficher() == '+'){
+				this.pommesRestantes--;
+			}
+			this.plateau[sourceX][sourceY] = new Vide();
+			this.plateau[destinationX][destinationY]=objetPlateau;
+		}else {
+			this.plateau[sourceX][sourceY] = this.plateau[destinationX][destinationY];
+			this.plateau[destinationX][destinationY] = objetPlateau;
+		}
+		this.joueurX = destinationX;
+		this.joueurY = destinationY;
 	}
 
 	/**
@@ -114,6 +132,20 @@ public class Niveau {
 
   // TODO : patron visiteur du Rocher...
 	public void etatSuivantVisiteur(Rocher r, int x, int y) {
+		switch (r.getEtatRocher()){
+			case FIXE :
+				if(this.plateau[x][y].estVide()){
+					r.setEtatRocher(CHUTE);
+				}
+			break;
+			case CHUTE :
+				if(x==this.plateau.length){
+					r.setEtatRocher(FIXE);
+				}
+				return;
+		}
+
+
 
 	}
 
@@ -124,12 +156,18 @@ public class Niveau {
 	 */
 	public void etatSuivant() {
     // TODO
+		for (int x = plateau.length - 1; x >= 0; x--) {
+			for (int y = plateau[x].length - 1; y >= 0; y--) { plateau[x][y].visiterPlateauCalculEtatSuivant(this, x, y);
+			} }
 	}
 
 
   // Illustrez les Javadocs manquantes lorsque vous coderez ces méthodes !
   
 	public boolean enCours() {
+		if(!this.gagner||!this.perdu){
+			return true;
+		}
 		return false;
 	}
 
@@ -172,7 +210,13 @@ public class Niveau {
 	 * Affiche l'état final (gagné ou perdu) une fois le jeu terminé.
 	 */
 	public void afficherEtatFinal() {
-
+		if(pommesRestantes == 0){
+			this.gagner = true;
+		}if (this.gagner){
+			System.out.println("Vous avez gagné !");
+		}else{
+			System.out.println("Vous avez perdu !");
+		}
 	}
 
 	/**
