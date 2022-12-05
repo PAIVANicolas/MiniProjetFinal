@@ -200,6 +200,9 @@ public class Niveau {
   // Joue la commande C passée en paramètres
 	public boolean jouer(Commande c) {
 		switch (c){
+			case QUITTER:
+				this.perdu = true;
+				break;
 			case BAS:
 				this.deplacer(this.joueurX+1, this.joueurY);
 				this.nombresDeplacements++;
