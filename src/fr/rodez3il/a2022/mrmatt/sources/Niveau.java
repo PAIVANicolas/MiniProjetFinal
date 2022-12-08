@@ -219,6 +219,7 @@ public class Niveau {
 		return false;
 	}
 
+
 	/**
 	 * Affiche l'état final (gagné ou perdu) une fois le jeu terminé.
 	 */
