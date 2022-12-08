@@ -58,62 +58,40 @@ public class Niveau {
 		String[] taillePlateau = cheminNiveau.split("\n");
 		TAILLE_HORIZONTALE = Integer.valueOf(taillePlateau[0]);
 		TAILLE_VERTICALE = Integer.valueOf(taillePlateau[1]);
-		this.plateau = new ObjetPlateau[TAILLE_VERTICALE][TAILLE_HORIZONTALE];
+		this.plateau = new ObjetPlateau[TAILLE_HORIZONTALE][TAILLE_VERTICALE];
 
 		//aide de Mr ADAMI
 		int compteurLignePlateau = 0;
 		int compteurColonnePlateau = 0;
 
-		for(int xColonne=2; xColonne<TAILLE_VERTICALE+2; xColonne++){
+		for(int yLigne=2; yLigne<TAILLE_VERTICALE+2; yLigne++){
 
-			for(int yLigne=0; yLigne<TAILLE_HORIZONTALE; yLigne++){
+			for(int xColonne=0; xColonne<TAILLE_HORIZONTALE; xColonne++){
 
 
-				char caractereCourrant = taillePlateau[xColonne].charAt(compteurLignePlateau);
-
-				if(caractereCourrant=='*'||caractereCourrant=='+'||caractereCourrant=='H'
-						||caractereCourrant=='-'||caractereCourrant=='#'||caractereCourrant==' '){
-					this.plateau[compteurColonnePlateau][yLigne]= ObjetPlateau.depuisCaractere(caractereCourrant);
+				char caractereCourrant = taillePlateau[yLigne].charAt(xColonne);
+					this.plateau[compteurColonnePlateau][compteurLignePlateau]= ObjetPlateau.depuisCaractere(caractereCourrant);
 					if(caractereCourrant=='H'){
+						this.joueurY=compteurLignePlateau;
 						this.joueurX=compteurColonnePlateau;
-						this.joueurY=yLigne;
-
 					}
-
 					if(caractereCourrant=='+'){
 						this.pommesRestantes++;
 					}
+				compteurColonnePlateau++;
 				}
 				compteurLignePlateau++;
-
+				compteurColonnePlateau=0;
 			}
-			compteurColonnePlateau++;
-			compteurLignePlateau=0;
-
-		}
-
 }
 
 	/**
 	 * échange l’objet en position (sourceX, sourceY) avec celui en position (destinationX, destinationY)
 	 */
 	private void echanger(int sourceX, int sourceY, int destinationX, int destinationY) {
-
-		System.out.println(sourceX + " " + sourceY + " " + destinationX + " " + destinationY);
-
 		ObjetPlateau objetPlateau = this.plateau[sourceX][sourceY];
-		if(this.plateau[destinationX][destinationY].estMarchable()){
-			if(this.plateau[destinationX][destinationY].afficher() == '+'){
-				this.plateau[sourceX][sourceY] = new Vide();
-				this.plateau[destinationX][destinationY]=objetPlateau;
-				this.pommesRestantes--;
-			}
-			this.plateau[sourceX][sourceY] = new Vide();
-			this.plateau[destinationX][destinationY]=objetPlateau;
-		}else {
 			this.plateau[sourceX][sourceY] = this.plateau[destinationX][destinationY];
 			this.plateau[destinationX][destinationY] = objetPlateau;
-		}
 	}
 
 	/**
@@ -122,12 +100,13 @@ public class Niveau {
 	 */
 	public void afficher() {
 		// aide de Mr ADAMI
-		for(int xVertical=0; xVertical<TAILLE_VERTICALE; xVertical++){
+		System.out.println(TAILLE_HORIZONTALE);
+		System.out.println(TAILLE_VERTICALE);
+
+		for(int yVertical=0; yVertical<TAILLE_VERTICALE; yVertical++){
 			String ligne ="";
-			for(int yHorizontal=0; yHorizontal<TAILLE_HORIZONTALE; yHorizontal++) {
-				if(this.getPlateau()[xVertical][yHorizontal]!=null){
-					ligne+=this.getPlateau()[xVertical][yHorizontal].afficher();
-				}
+			for(int xHorizontal=0; xHorizontal<TAILLE_HORIZONTALE; xHorizontal++) {
+					ligne+=this.getPlateau()[xHorizontal][yVertical].afficher();
 			}
 			System.out.println(ligne);
 		}
@@ -141,6 +120,7 @@ public class Niveau {
 			case FIXE :
 				if(this.plateau[x][y].estVide()){
 					r.setEtatRocher(CHUTE);
+
 				}
 			break;
 			case CHUTE :
@@ -181,41 +161,60 @@ public class Niveau {
 	/**
 	 * Test que le déplacement dx et dy ne sort pas du plateau et que le déplacement est marchable
 	 */
-	private boolean deplacementPossible(int dx, int dy){
-		if ((dx>=0&&dy>=0) && dx<plateau.length && dy<plateau[0].length && this.plateau[dx][dy].estMarchable()){
+	private boolean deplacementPossible(int dx, int dy) {
+		int destinationX = joueurX + dx;
+		int destinationY = joueurY +dy;
+		if (destinationX >= 0 && destinationX < TAILLE_HORIZONTALE && destinationY >= 0 && destinationY < TAILLE_VERTICALE && this.plateau[destinationX][destinationY].estMarchable()) {
 			return true;
 		}
 		return false;
 	}
 
+
 	/**
 	 *
 	 */
 	public void deplacer(int deltaX, int deltaY){
-		this.echanger( this.joueurX,this.joueurY,deltaX,deltaY);
-		this.joueurX = deltaX;
-		this.joueurY = deltaY;
+		if(deltaX ==0){
+			if(deltaX + joueurY >= 0 && deltaX + joueurY < this.plateau.length )
+				if(this.plateau[joueurX][joueurY + deltaX].estPoussable() && this.plateau[joueurX][joueurY+ 2*deltaY].estVide()){
+					this.echanger(joueurX, joueurY  + deltaY,joueurX, joueurY  + 2*deltaY);
+					this.echanger(joueurX, joueurY + deltaY, joueurX, joueurY);
+					}
+		}
+		this.echanger( this.joueurX,this.joueurY,joueurX + deltaX,joueurY +deltaY);
+		this.joueurX += deltaX;
+		this.joueurY += deltaY;
 	}
 
   // Joue la commande C passée en paramètres
 	public boolean jouer(Commande c) {
+		int dx = 0, dy = 0;
+
 		switch (c){
 			case QUITTER:
 				this.perdu = true;
 				break;
+			case ERREUR:
+				return false;
 			case BAS:
-				this.deplacer(this.joueurX+1, this.joueurY);
-				this.nombresDeplacements++;
-				return true;
-			case HAUT:this.deplacer(this.joueurX-1,this.joueurY);
-				this.nombresDeplacements++;
-				return true;
-			case DROITE:this.deplacer(this.joueurX,this.joueurY+1);
-				this.nombresDeplacements++;
-				return true;
-			case GAUCHE:this.deplacer(this.joueurX,this.joueurY-1);
-				this.nombresDeplacements++;
-				return true;
+				dy = 1;
+				break;
+			case HAUT:
+				dy = -1;
+				break;
+			case DROITE:
+				dx = 1;
+				break;
+			case GAUCHE:
+				dx = -1;
+				break;
+		}
+		if(dx!=0 || dy !=0){
+			if (deplacementPossible(dx, dy)) {
+				deplacer(dx,dy);
+				nombresDeplacements++;
+			}
 		}
 		return false;
 	}
@@ -234,6 +233,7 @@ public class Niveau {
 	/**
 	 */
 	public boolean estIntermediaire() {
+
 		return false;
 	}
 }
