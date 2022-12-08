@@ -21,6 +21,7 @@ public class Niveau {
 	private int nombresDeplacements;
 	private int TAILLE_HORIZONTALE;
 	private int TAILLE_VERTICALE;
+	private boolean intermediaire;
 	private boolean gagner = false;
 	private boolean perdu = false;
 	
@@ -37,8 +38,6 @@ public class Niveau {
 		this.pommesRestantes = 0;
 		this.nombresDeplacements = 0;
 		this.chargerNiveau(chemin);
-
-
 
 	}
 
@@ -68,7 +67,6 @@ public class Niveau {
 
 			for(int xColonne=0; xColonne<TAILLE_HORIZONTALE; xColonne++){
 
-
 				char caractereCourrant = taillePlateau[yLigne].charAt(xColonne);
 					this.plateau[compteurColonnePlateau][compteurLignePlateau]= ObjetPlateau.depuisCaractere(caractereCourrant);
 					if(caractereCourrant=='H'){
@@ -90,10 +88,20 @@ public class Niveau {
 	 */
 	private void echanger(int sourceX, int sourceY, int destinationX, int destinationY) {
 		ObjetPlateau objetPlateau = this.plateau[sourceX][sourceY];
-			this.plateau[sourceX][sourceY] = this.plateau[destinationX][destinationY];
-			this.plateau[destinationX][destinationY] = objetPlateau;
-	}
 
+		if(this.plateau[destinationX][destinationY].estMarchable()){
+			if(this.plateau[destinationX][destinationY].afficher()=='+'){
+				this.pommesRestantes--;
+			}
+			this.plateau[sourceX][sourceY]=new Vide();
+			this.plateau[destinationX][destinationY]=objetPlateau;
+		}else{
+
+			this.plateau[sourceX][sourceY]=this.plateau[destinationX][destinationY];
+			this.plateau[destinationX][destinationY]=objetPlateau;
+		}
+
+	}
 	/**
 	 * Produit une sortie du niveau sur la sortie standard.
 	 * ................
@@ -144,6 +152,7 @@ public class Niveau {
 		for (int x = plateau.length - 1; x >= 0; x--) {
 			for (int y = plateau[x].length - 1; y >= 0; y--) { plateau[x][y].visiterPlateauCalculEtatSuivant(this, x, y);
 			}
+			this.gagner = pommesRestantes == 0;
 		}
 		this.gagner = pommesRestantes == 0;
 	}
@@ -152,10 +161,14 @@ public class Niveau {
   // Illustrez les Javadocs manquantes lorsque vous coderez ces méthodes !
   
 	public boolean enCours() {
+		this.gagner = this.pommesRestantes==0;
+
 		if(!this.gagner && !this.perdu){
 			return true;
+		}else {
+			return  false;
 		}
-		return false;
+
 	}
 
 	/**
@@ -175,7 +188,7 @@ public class Niveau {
 	 *
 	 */
 	public void deplacer(int deltaX, int deltaY){
-		if(deltaX ==0){
+		if(deltaX == 0){
 			if(deltaX + joueurY >= 0 && deltaX + joueurY < this.plateau.length )
 				if(this.plateau[joueurX][joueurY + deltaX].estPoussable() && this.plateau[joueurX][joueurY+ 2*deltaY].estVide()){
 					this.echanger(joueurX, joueurY  + deltaY,joueurX, joueurY  + 2*deltaY);
@@ -234,7 +247,6 @@ public class Niveau {
 	/**
 	 */
 	public boolean estIntermediaire() {
-
-		return false;
+		return this.intermediaire&&this.enCours();
 	}
 }
