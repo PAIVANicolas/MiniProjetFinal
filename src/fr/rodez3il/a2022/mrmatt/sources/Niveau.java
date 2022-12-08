@@ -163,7 +163,7 @@ public class Niveau {
 	 */
 	private boolean deplacementPossible(int dx, int dy) {
 		int destinationX = joueurX + dx;
-		int destinationY = joueurY +dy;
+		int destinationY = joueurY + dy;
 		if (destinationX >= 0 && destinationX < TAILLE_HORIZONTALE && destinationY >= 0 && destinationY < TAILLE_VERTICALE && this.plateau[destinationX][destinationY].estMarchable()) {
 			return true;
 		}
