@@ -32,32 +32,53 @@ public abstract class ObjetPlateau {
 		}
 		return nouveau;
 	}
-	// qui  renvoie  le  caractère  correspondant  à  l’objet.  Cette  méthode  sera  redéfinie  dans  chaque  objet  à  implan- ter
+	/**
+	 * Cette  méthode  sera  redéfinie  dans  chaque  objet  à  implanter
+	 * @return le  caractère  correspondant  à  l’objet.
+	 * @author PAIVA Nicolas
+	 */
 	public abstract char afficher();
 
-	// qui  renvoie  si  l’objet  est  vide
+	/**
+	 * @return si l’objet est vide
+	 * @author PAIVA Nicolas
+	 */
 	public boolean estVide(){
 		return false;
 	}
 
-	// qui   renvoie   si   l’objet   est   marchable (c’est  à  dire  que  le  joueur  peut  s’y  déplacer)
+	/**
+	 * @return si l’objet est marchable
+	 * @author PAIVA Nicolas
+	 */
 	public boolean estMarchable(){
 		return false;
 	}
 
-	//qui renvoie si l’objet est poussable (c’est à dire que le joueur peut le pousser horizontalement en se déplaçant dans sa direction)
+	/**
+	 * @return si l’objet est poussable
+	 * c’est à dire que le joueur peut le pousser horizontalement en se déplaçant dans sa direction
+	 * @author PAIVA Nicolas
+	 */
 	public boolean estPoussable(){
 		return false;
 	}
 
-	//  qui renvoie si l’objet est glissant (c’est à dire qu’un rocher tombant dessus glissera à gauche ou à droite pour tomber)
+	/**
+	 * @return si l’objet est glissant
+	 * c’est à dire qu’un rocher tombant dessus glissera à gauche ou à droite pour tomber
+	 * @author PAIVA Nicolas
+	 */
 	public boolean estGlissant() {
 		return false;
 	}
 
-	// qui  implémente  le  patron  Visiteur  pour  calculer  l’état  suivant  du  niveau  en  cours
+	/**
+	 * qui  implémente  le  patron  Visiteur  pour  calculer  l’état  suivant  du  niveau  en  cours
+	 * @param niveau,x,y
+	 * @author PAIVA NIcolas
+	 */
 	public void visiterPlateauCalculEtatSuivant(Niveau niveau, int x, int y){
 		
 	}
-
 }

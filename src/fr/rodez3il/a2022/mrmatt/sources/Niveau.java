@@ -9,6 +9,11 @@ import fr.rodez3il.a2022.mrmatt.sources.objets.Vide;
 import static fr.rodez3il.a2022.mrmatt.sources.objets.EtatRocher.CHUTE;
 import static fr.rodez3il.a2022.mrmatt.sources.objets.EtatRocher.FIXE;
 
+
+/**
+ * initialisation du constructeur de la classe Niveau
+ * @author nicolaspaiva
+ */
 public class Niveau {
 	
 	// Les objets sur le plateau du niveau
@@ -30,7 +35,7 @@ public class Niveau {
 	/**
 	 * Constructeur public : crée un niveau depuis un fichier.
 	 * @param chemin .....
-	 * @author .............
+	 * @author PAIVA Nicolas
 	 */
 	public Niveau(String chemin) {
 		this.chargerNiveau(chemin);
@@ -50,7 +55,9 @@ public class Niveau {
 	}
 
 	/**
-	 *
+	 * Méthode privée permettant de charger le niveau du jeu.
+	 * @param chemin .....
+	 * @author PAIVA Nicolas
 	 */
 	private void chargerNiveau(String chemin) {
 		String cheminNiveau = Utils.lireFichier(chemin);
@@ -84,7 +91,9 @@ public class Niveau {
 }
 
 	/**
-	 * échange l’objet en position (sourceX, sourceY) avec celui en position (destinationX, destinationY)
+	 * échange l’objet en position (sourceX, sourceY) avec les positions (destinationX, destinationY)
+	 * @param sourceX,sourceY,destinationX,destinationY
+	 * @Author PAIVA Nicolas
 	 */
 	private void echanger(int sourceX, int sourceY, int destinationX, int destinationY) {
 		ObjetPlateau objetPlateau = this.plateau[sourceX][sourceY];
@@ -105,6 +114,7 @@ public class Niveau {
 	/**
 	 * Produit une sortie du niveau sur la sortie standard.
 	 * ................
+	 * @Author PAIVA Nicolas
 	 */
 	public void afficher() {
 		// aide de Mr ADAMI
@@ -122,8 +132,14 @@ public class Niveau {
 		System.out.println("Nombre de deplacements : " + nombresDeplacements);
 	}
 
+	/**
+	 * Permet de faire passer le rocher a l'état FIXE ou FUCHE
+	 * @param r,x,y
+	 * @Author PAIVA Nicolas
+	 */
   // TODO : patron visiteur du Rocher...
-	public void etatSuivantVisiteur(Rocher r, int x, int y) {
+	
+ 	public void etatSuivantVisiteur(Rocher r, int x, int y) {
 		switch (r.getEtatRocher()){
 			case FIXE :
 				if(this.plateau[x][y].estVide()){
@@ -137,29 +153,29 @@ public class Niveau {
 				}
 				return;
 		}
-
-
-
 	}
 
 	/**
 	 * Calcule l'état suivant du niveau.
-	 * ........
-	 * @author 
+	 * @Author PAIVA Nicolas
 	 */
 	public void etatSuivant() {
     // TODO
+		
 		for (int x = plateau.length - 1; x >= 0; x--) {
 			for (int y = plateau[x].length - 1; y >= 0; y--) { plateau[x][y].visiterPlateauCalculEtatSuivant(this, x, y);
 			}
-			this.gagner = pommesRestantes == 0;
 		}
-		this.gagner = pommesRestantes == 0;
 	}
 
 
   // Illustrez les Javadocs manquantes lorsque vous coderez ces méthodes !
-  
+
+	/**
+	 *Méthode qui verifie si le jeu est toujours en cours
+	 * @return l'état enCour boolean
+	 * @Author PAIVA Nicolas
+	 */
 	public boolean enCours() {
 		this.gagner = this.pommesRestantes==0;
 
@@ -172,7 +188,10 @@ public class Niveau {
 	}
 
 	/**
-	 * Test que le déplacement dx et dy ne sort pas du plateau et que le déplacement est marchable
+	 *Test que le déplacement dx et dy ne sort pas
+	 *du plateau et que le déplacement est marchable
+	 * @param dx,dy
+	 * @Author PAIVA Nicolas
 	 */
 	private boolean deplacementPossible(int dx, int dy) {
 		int destinationX = joueurX + dx;
@@ -185,7 +204,9 @@ public class Niveau {
 
 
 	/**
-	 *
+	 * permet de deplacer le joueur sur le plateau
+	 * @param deltaX,deltaY
+	 * @Author PAIVA Nicolas
 	 */
 	public void deplacer(int deltaX, int deltaY){
 		if(deltaX == 0){
@@ -200,7 +221,11 @@ public class Niveau {
 		this.joueurY += deltaY;
 	}
 
-  // Joue la commande C passée en paramètres
+	/**Joue la commande C passée en paramètres
+	 * @param c
+	 * @return le choix de la commande c
+	 * @Author Nicolas PAIVA
+	 */
 	public boolean jouer(Commande c) {
 		int dx = 0, dy = 0;
 
@@ -235,6 +260,7 @@ public class Niveau {
 
 	/**
 	 * Affiche l'état final (gagné ou perdu) une fois le jeu terminé.
+	 * @Author Nicolas PAIVA
 	 */
 	public void afficherEtatFinal() {
 		if(this.gagner){
@@ -245,6 +271,9 @@ public class Niveau {
 	}
 
 	/**
+	 * permet de mettre de jeu en attente quand les roches sont en chute
+	 * @Author Nicolas
+	 * @return l'état intermediaire (enCour ou intermediaire)
 	 */
 	public boolean estIntermediaire() {
 		return this.intermediaire&&this.enCours();
